@@ -25,61 +25,45 @@ b) Implemente predicados para representar as seguintes relações:
 
 */
 
-progenitor(joao, maria).
-progenitor(joao, pedro).
-progenitor(ana, maria).
-progenitor(ana, pedro).
+progenitor(roberto, lucas).
+progenitor(roberto, marina).
+progenitor(carla, lucas).
+progenitor(carla, marina).
 
-progenitor(maria, julia).
-progenitor(maria, tiago).
-progenitor(carlos, julia).
-progenitor(carlos, tiago).
+progenitor(lucas, pedro).
 
-progenitor(pedro, lucas).
-progenitor(pedro, beatriz).
-progenitor(laura, lucas).
-progenitor(laura, beatriz).
+progenitor(marina, sofia).
 
-masculino(joao).
-masculino(pedro).
-masculino(carlos).
-masculino(tiago).
+progenitor(pedro, daniel).
+progenitor(sofia, daniel).
+
+masculino(roberto).
 masculino(lucas).
+masculino(pedro).
+masculino(daniel).
 
-feminino(ana).
-feminino(maria).
-feminino(laura).
-feminino(julia).
-feminino(beatriz).
+feminino(carla).
+feminino(marina).
+feminino(sofia).
 
-irmao(X, Y) :- 
-    progenitor(P, X), 
-    progenitor(P, Y), 
-    X \= Y.
+pai(Pai, Filho) :- progenitor(Pai, Filho), masculino(Pai).
+mae(Mae, Filho) :- progenitor(Mae, Filho), feminino(Mae).
 
-tio(X, Y) :- 
-    progenitor(P, Y), 
-    irmao(X, P).
+irmao(Irmao, Pessoa) :- progenitor(X, Irmao), progenitor(X, Pessoa), Irmao \= Pessoa, masculino(Irmao).
+irma(Irma, Pessoa) :- progenitor(X, Irma), progenitor(X, Pessoa), Irma \= Pessoa, feminino(Irma).
 
-avou(X, Y) :- 
-    progenitor(X, P), 
-    progenitor(P, Y).
+tio(Tio, Sobrinho) :- irmao(Tio, PaiOuMae), progenitor(PaiOuMae, Sobrinho).
+tia(Tia, Sobrinho) :- irma(Tia, PaiOuMae), progenitor(PaiOuMae, Sobrinho).
 
-primo(X, Y) :- 
-    progenitor(PX, X), 
-    progenitor(PY, Y), 
-    irmao(PX, PY).
+avo(Avo, Neto) :- progenitor(Avo, FilhoOuFilha), progenitor(FilhoOuFilha, Neto).
 
-descendente(X, Y) :- 
-    progenitor(Y, X).
+primo(Primo, Pessoa) :- progenitor(X, Primo), progenitor(Y, Pessoa), (irmao(X, Y) ; irma(X, Y)), masculino(Primo).
+prima(Prima, Pessoa) :- progenitor(X, Prima), progenitor(Y, Pessoa), (irmao(X, Y) ; irma(X, Y)), feminino(Prima).
 
-descendente(X, Y) :- 
-    progenitor(Z, X), 
-    descendente(Z, Y).
+descendente(Descendente, Ancestral) :- progenitor(Ancestral, Descendente).
+descendente(Descendente, Ancestral) :- progenitor(X, Descendente), descendente(X, Ancestral).
 
-ancestral(X, Y) :- 
-    progenitor(X, Y).
 
-ancestral(X, Y) :- 
-    progenitor(X, Z), 
-    ancestral(Z, Y).
+ancestral(X, Y) :- progenitor(X, Y).
+
+ancestral(X, Y) :- progenitor(X, Z), ancestral(Z, Y).

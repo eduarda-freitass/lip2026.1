@@ -40,11 +40,12 @@ conta_vizinhos(Cidade, Quantidade) :-
     length(ListaVizinhos, Quantidade).
 
 
-maior_vizinhanca(CidadeMax, MaxVizinhos) :-
-    findall(Qtd-C, conta_vizinhos(C, Qtd), ListaQtdCidades),
+maior_vizinhanca(Cidades, X) :-
+    findall(Qtd-C, (cidade(C), conta_vizinhos(C, Qtd)), ListaQtdCidades),
     sort(ListaQtdCidades, ListaOrdenada),
-    reverse(ListaOrdenada, [MaxVizinhos-CidadeMax | _]).
+    reverse(ListaOrdenada, [X-_ | _]),
+    findall(C2, conta_vizinhos(C2, X), Cidades).
 
-verifica_ilha(Cidade) :-
-    cidade(Cidade),
-    \+ conectado_bidirecional(Cidade, _).
+verifica_ilha(Cidades, X) :- 
+    member(X, Cidades), 
+    \+ conectado_bidirecional(X, _).
